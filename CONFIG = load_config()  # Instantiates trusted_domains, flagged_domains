@@ -1,0 +1,1 @@
+CONFIG = load_config()  # Instantiates trusted_domains, flagged_domains
