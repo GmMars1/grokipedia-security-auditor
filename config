@@ -1,7 +1,0 @@
-trusted_domains:
-  - example.com
-  - mysite.org
-
-flagged_domains:
-  - suspicious.com
-  - spam.org
