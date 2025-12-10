@@ -1,0 +1,103 @@
+import yaml
+from urllib.parse import urlparse
+
+# 1. Load Configuration
+def load_config(config_path="config.yaml"):
+    """
+    Loads the forensic rules from the YAML file.
+    In a real deployment, this reads the actual file on disk.
+    """
+    # Simulating the YAML structure based on your verified file
+    return {
+        "scoring": {
+            "base_points": 50,         #
+            "trusted_multiplier": 50,  #
+            "flagged_penalty": 15      #
+        },
+        "trusted_domains": [".edu", ".gov", ".mil", "nature.com", "github.com", "stripe.com"],
+        "flagged_domains": ["zerohedge.com", "infowars.com", "dailymail.co.uk"]
+    }
+
+# 2. Domain Classification
+def classify_link(link, config):
+    """
+    Determines if a link is Trusted, Flagged, or Neutral.
+    Handles wildcard domains (e.g., .edu) and exact matches.
+    """
+    try:
+        domain = urlparse(link).netloc.lower()
+        if not domain: return "NEUTRAL" # Handle malformed links
+        
+        # Check Trusted (Green List)
+        for trusted in config["trusted_domains"]:
+            # EndsWith handles both "mit.edu" (.edu wildcard) and "github.com"
+            if domain.endswith(trusted):
+                return "TRUSTED"
+                
+        # Check Flagged (Red List)
+        for flagged in config["flagged_domains"]:
+            if domain.endswith(flagged):
+                return "FLAGGED"
+                
+        return "NEUTRAL"
+    except Exception:
+        return "NEUTRAL"
+
+# 3. The Scoring Algorithm
+def calculate_trust_score(citations, config):
+    """
+    Applies the GrokiPedia Formula:
+    Base: 50pts + (Trusted Ratio × 50) - (Flagged × 15)
+    """
+    total_links = len(citations)
+    if total_links == 0:
+        return 50  # Default neutral score if no citations found
+    
+    # Tally up counts
+    results = [classify_link(url, config) for url in citations]
+    trusted_count = results.count("TRUSTED")
+    flagged_count = results.count("FLAGGED")
+    
+    # Calculate Variables
+    trusted_ratio = trusted_count / total_links
+    
+    # The Math
+    base = config["scoring"]["base_points"]
+    bonus = trusted_ratio * config["scoring"]["trusted_multiplier"]
+    penalty = flagged_count * config["scoring"]["flagged_penalty"]
+    
+    final_score = base + bonus - penalty
+    
+    # Clamp score between 0 and 100 to keep it clean
+    return max(0, min(100, round(final_score)))
+
+# 4. Generate Verdict
+def get_verdict(score):
+    """Returns the text verdict based on score tiers defined in README."""
+    if score >= 80:
+        return "✅ HIGH RELIABILITY"         #
+    elif score >= 50:
+        return "⚠️ MODERATE / NEEDS REVIEW" #
+    else:
+        return "⛔ LOW / MISINFO RISK"      #
+
+# --- EXECUTION SIMULATION ---
+
+# Mock Data (Simulating a scan of a controversial tech article)
+citations_found = [
+    "https://www.mit.edu/research/ai-ethics",  # Trusted (.edu)
+    "https://github.com/grokipedia",           # Trusted (marketplace)
+    "https://nature.com/articles/123",         # Trusted (journal)
+    "https://zerohedge.com/market-update",     # Flagged (misinfo)
+    "https://random-tech-blog.com/post/1"      # Neutral (unknown)
+]
+
+# Run the Audit
+conf = load_config()
+score = calculate_trust_score(citations_found, conf)
+verdict = get_verdict(score)
+
+print(f"Auditing {len(citations_found)} links...")
+print(f"Details: {citations_found}")
+print(f"Final Trust Score: {score}/100")
+print(f"Verdict: {verdict}")
