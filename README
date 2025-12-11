@@ -1,0 +1,15 @@
+GrokiPedia-Security-Auditor-v2.3.1/
+├── grokipedia-auditor           # Main CLI entrypoint
+├── verify.sh
+├── verify.ps1
+├── verify.bat                   # Cross‑platform integrity checks
+├── config/
+│   ├── framework-v2.3.1.yaml
+│   └── domains-trust-v2.4.yaml  # 42 trusted / 14 flagged domains
+├── deploy.sh
+├── triple-check.sh              # Full automation + integrity
+├── generate-proposals.sh        # Revenue proposal generator
+├── email-proposals.sh           # Whop email sender
+├── README.md
+├── requirements.txt
+└── checksums.txt                # Self-verifying SHA256 list
