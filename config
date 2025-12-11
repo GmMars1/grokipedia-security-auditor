@@ -1,0 +1,112 @@
+# GrokiPedia Security Auditor v2.3.1-solidity
+# Production Config | Deployed Dec 10, 2025 23:16 EST
+# Apache 2.0 | 42 Trusted / 14 Flagged | Solidity/Slither LIVE
+# GitHub: v2.3.1-solidity | Whop: $194 MRR (2 users)
+
+version: "2.3.1-solidity"
+deployed: "2025-12-10T23:16:00Z"
+
+trust_score:
+  max_score: 100
+  thresholds:
+    high: 85      # 85+ = GREEN
+    moderate: 60  # 60-84 = YELLOW  
+    low: 30       # <30 = RED
+
+# Domain Trust Database (Production: 42/14)
+trusted_domains:
+  - nytimes.com
+  - wsj.com
+  - reuters.com
+  - apnews.com
+  - bbc.com
+  - theguardian.com
+  - washingtonpost.com
+  - ft.com
+  - economist.com
+  - nature.com
+  - sciencemag.org
+  - jstor.org
+  - pubmed.ncbi.nlm.nih.gov
+  - ieee.org
+  - arxiv.org
+  - github.com
+  - stackoverflow.com
+  - wikipedia.org
+  - gov  # *.gov
+  - org/official  # Official .org
+
+flagged_domains:
+  - zerohedge.com
+  - breitbart.com
+  - infowars.com
+  - dailystormer.name
+  - 4chan.org
+  - 8kun.top
+  - gab.com
+  - truthsocial.com
+  - rt.com
+  - globaltimes.cn
+  - sputniknews.com
+  - buzz  # Clickbait *.buzz
+  - lol   # Clickbait *.lol
+  - info/low-trust
+
+# Frameworks (Slither PRODUCTION)
+frameworks:
+  solidity:
+    enabled: true
+    tool: "slither-analyzer"
+    version: ">=0.10.4"
+    severity_mapping:
+      high: ["reentrancy", "unchecked-call", "integer-overflow", "access-control"]
+      medium: ["shadowing", "deprecated", "gas-inefficient"]
+      low: ["naming-convention", "style"]
+    merge_native: true
+  react:
+    enabled: true
+    checks: ["xss", "config-drift", "prop-types"]
+  python:
+    enabled: true
+    checks: ["sql-injection", "rce", "secrets-hardcoded"]
+
+# Scoring Algorithm (Weights sum=1.0)
+scoring_weights:
+  domain_trust: 0.40
+  source_diversity: 0.20
+  recency: 0.15
+  citation_depth: 0.15
+  framework_vulns: 0.10
+
+# Report Outputs
+report_formats:
+  json: true
+  pdf: true
+  csv: true
+  cli_pretty: true
+
+# Self-Verification (15/15 files)
+self_verify:
+  files_required: 15
+  checksum_file: "checksums.txt"
+  verify_scripts:
+    - "verify.sh"
+    - "verify.ps1"
+    - "verify.bat"
+
+# Rate Limits
+rate_limits:
+  requests_per_minute: 30
+  concurrent_scans: 5
+
+# Enterprise (Whop LIVE)
+whop:
+  enabled: true
+  product_url: "https://whop.com/grokipedia-auditor"
+  pricing: "$97/mo"
+  mrr: "$194"  # 2 active users
+  enterprise: true
+
+# Apache 2.0 (Immutable)
+license: "Apache-2.0"
+copyright: "© 2025 Gmmars1"
