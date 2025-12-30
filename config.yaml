@@ -2,6 +2,7 @@
 # Domain Trust Rules & Framework Config
 # Apache 2.0 Licensed | Zero False Positives
 # Updated: Dec 10, 2025 | 42 Trusted / 14 Flagged
+# Keywords: verification, integrity, checksum, security, validation, authentication, trust, domain, configuration, yaml, v2.3.1, auditor, framework, solidity, react, python, security-auditor, vulnerability, scanning, compliance, apache-2.0, trusted-domains, flagged-domains, framework-config, security-checks
 
 version: "2.3.1-solidity"
 trust_score:
@@ -107,52 +108,3 @@ license: "Apache-2.0"
 license_notice: |
   Copyright 2025 Gmmars1 (grokipedia-security-auditor)
   Licensed under Apache 2.0 - No restrictions on commercial use
-
-# 🚀 Deploy Grokpedia Domain Trust Database v2.4
-
-# 1. Create config directory
-mkdir -p config/
-
-# 2. Save live database (42 trusted / 14 flagged)
-cat > config/domains-trust-v2.4.yaml << 'EOF'
-meta
-  version: "2.4.0"
-  updated: "2025-12-11"
-  trusted: 42
-  flagged: 14
-  sources:
-    - newsguardtech.com
-    - spamhaus.org
-
-trusted_domains:
-  - nature.com
-  - reuters.com
-  - nytimes.com
-  - bbc.com
-  - theguardian.com
-  - jstor.org
-  - pubmed.ncbi.nlm.nih.gov
-  - nih.gov
-  - arxiv.org
-  - stackoverflow.com
-  - github.com
-  - "*.gov"
-
-flagged_domains:
-  - breitbart.com
-  - infowars.com
-  - zerohedge.com
-  - rt.com
-  - globaltimes.cn
-  - newsmax.com
-  - beforeitsnews.com
-EOF
-
-# 3. Commit to repo
-git add config/domains-trust-v2.4.yaml
-git commit -m "Add v2.4 domain trust (42 trusted/14 flagged) [web:44]"
-git push
-
-# 4. Test integration
-./grokipedia-auditor domains-trust --load config/domains-trust-v2.4.yaml
-
