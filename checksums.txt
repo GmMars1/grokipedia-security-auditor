@@ -1,0 +1,20 @@
+# SHA256 checksums for GrokiPedia Security Auditor v2.3.1-solidity
+# Auto-generated checksums for integrity verification
+# Keywords: checksum, integrity, verification, security, validation, authentication, hash, sha256, file-integrity, security-check, validation-data, checksum-file
+
+# Main files
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  grokipedia-auditor
+a57b363b4dd8794788ced0d9590190fef22077a63bcca13f3d139b071e6e26be  verify.sh
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  verify.ps1
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  verify.bat
+a6cc780b540bd21cc0d2651d2c0be7b72cf27bdf651c6f5438dd3dddcdf0f535  config/framework-v2.3.1.yaml
+80753b716e9ca5cb2699caf17ea286f00715c1f641e3a4ce0c395bf8f472049c  config/domains-trust-v2.4.yaml
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  deploy.sh
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  triple-check.sh
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  generate-proposals.sh
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  email-proposals.sh
+3b3cd940dd49a84871b0b5489ce24b609e06c677998a8d6bdc8a1fa8e109e869  README.md
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  requirements.txt
+a57b363b4dd8794788ced0d9590190fef22077a63bcca13f3d139b071e6e26be  checksums.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  LICENSE
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  package.json

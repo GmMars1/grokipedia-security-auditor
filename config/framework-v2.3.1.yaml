@@ -1,0 +1,25 @@
+# GrokiPedia Security Auditor Framework Configuration v2.3.1
+# Solidity Framework Configuration
+# Keywords: framework, security, auditor, verification, integrity, checksum, validation, authentication, solidity, react, python, vulnerability, scanning, compliance, security-auditor, framework-config, security-checks, yaml, v2.3.1, slither-analyzer, severity-mapping
+
+version: "2.3.1"
+frameworks:
+  solidity:
+    enabled: true
+    tool: "slither-analyzer"
+    version: ">=0.10.4"
+    severity_mapping:
+      high: ["reentrancy", "unchecked-call", "integer-overflow", "access-control"]
+      medium: ["shadowing", "deprecated", "gas-inefficient"]
+      low: ["naming-convention", "style-guide"]
+    merge_native: true
+  react:
+    enabled: true
+    checks: ["xss", "config-drift", "prop-types"]
+  python:
+    enabled: true
+    checks: ["sql-injection", "rce", "secrets-hardcoded"]
+
+# Scoring weights for framework-based analysis
+scoring_weights:
+  framework_vulns: 0.10

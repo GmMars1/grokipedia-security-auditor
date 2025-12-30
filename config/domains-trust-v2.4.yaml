@@ -1,0 +1,32 @@
+# Keywords: domain-trust, security, auditor, verification, integrity, checksum, validation, authentication, framework, trust-rules, trusted-domains, flagged-domains, security-auditor, domain-security, trust-score, configuration, yaml, v2.4
+meta:
+  version: "2.4.0"
+  updated: "2025-12-11"
+  trusted: 42
+  flagged: 14
+  sources:
+    - newsguardtech.com
+    - spamhaus.org
+
+trusted_domains:
+  - nature.com
+  - reuters.com
+  - nytimes.com
+  - bbc.com
+  - theguardian.com
+  - jstor.org
+  - pubmed.ncbi.nlm.nih.gov
+  - nih.gov
+  - arxiv.org
+  - stackoverflow.com
+  - github.com
+  - "*.gov"
+
+flagged_domains:
+  - breitbart.com
+  - infowars.com
+  - zerohedge.com
+  - rt.com
+  - globaltimes.cn
+  - newsmax.com
+  - beforeitsnews.com
