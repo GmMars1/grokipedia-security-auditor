@@ -1,108 +1,22 @@
 ```
-# Dependencies
-node_modules/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
-env/
-.Python
-pip-log.txt
-pip-delete-this-directory.txt
+# Executable files
+extracted/bin/*
 
-# Build artifacts
-dist/
-build/
-*.egg
-*.egg-info/
-*.so
-*.dylib
-*.dll
-*.exe
-*.out
-*.o
-*.obj
-*.a
-*.lib
+# Environment and config files
+extracted/config/*.txt
+extracted/config/*.conf
 
-# Logs
-*.log
-logs/
+# Temporary and log files
 *.tmp
-*.temp
+*.log
 
-# Environment
-.env
-.env.local
-.env.*
-.envrc
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
+# Backup files
 *~
+*.bak
+*.swp
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Icon?
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Testing
-.coverage
-htmlcov/
-coverage/
-.pytest_cache/
-.mypy_cache/
-tox.ini
-.coverage.*
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# Temp files
-temp_*
-*.tmp
-*.temp
-
-# Scripts
-*.bat
-*.ps1
-*.sh~
-
-# Generated files
-checksums.txt
-temp_checksums.txt
 ```
+GrokiPedia-Security-Auditor-v2.3.1-solidity.zip
