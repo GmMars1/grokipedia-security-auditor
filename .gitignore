@@ -1,0 +1,21 @@
+```
+# Executable files
+extracted/bin/*
+
+# Environment and config files
+extracted/config/*.txt
+extracted/config/*.conf
+
+# Temporary and log files
+*.tmp
+*.log
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+```
