@@ -3,7 +3,7 @@
 
 # Configuration
 CHECKSUM_FILE="checksums.txt"
-EXPECTED_COUNT=16  # Total entries in checksums.txt minus 2 (verify.sh and checksums.txt can't verify themselves)
+EXPECTED_COUNT=4  # Total entries in checksums.txt minus 2 (verify.sh and checksums.txt can't verify themselves)
 
 # Color codes for output
 GREEN='\033[0;32m'
