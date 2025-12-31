@@ -26,6 +26,33 @@ for config in settings.conf; do
     [[ -f "config/$config" ]] && echo "✅ Config $config: OK" || echo "❌ Config $config: MISSING"
 done
 
+# Check for new content-audit command
+if bin/grokipedia-auditor help 2>&1 | grep -q "content-audit"; then
+    echo "✅ New content-audit command: OK"
+else
+    echo "❌ New content-audit command: MISSING"
+fi
+
+# Check for required dependencies
+command -v curl >/dev/null 2>&1 && echo "✅ curl: OK" || echo "❌ curl: MISSING"
+command -v openssl >/dev/null 2>&1 && echo "✅ openssl: OK" || echo "❌ openssl: MISSING"
+command -v bc >/dev/null 2>&1 && echo "✅ bc: OK" || echo "❌ bc: MISSING"
+
+# Test basic functionality
 echo ""
-echo "🎉 All verification checks passed!"
+echo "🧪 Testing basic functionality..."
+if bin/grokipedia-auditor version >/dev/null 2>&1; then
+    echo "✅ Version command: OK"
+else
+    echo "❌ Version command: FAILED"
+fi
+
+if bin/grokipedia-auditor help >/dev/null 2>&1; then
+    echo "✅ Help command: OK"
+else
+    echo "❌ Help command: FAILED"
+fi
+
+echo ""
+echo "🎉 All verification checks completed!"
 echo "📦 Installation is ready for production use."

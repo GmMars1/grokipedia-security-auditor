@@ -4,20 +4,59 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VERSION="v2.3.1-solidity"
+# Global variables
+readonly SCRIPT_NAME="grokipedia-auditor"
+readonly VERSION="v2.3.1-solidity"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly LOG_FILE="${SCRIPT_DIR}/logs/auditor.log"
+
+# Ensure log directory exists
+mkdir -p "${SCRIPT_DIR}/logs"
 
 # Source libraries
-[[ -f "${SCRIPT_DIR}/lib/core.sh" ]] && source "${SCRIPT_DIR}/lib/core.sh"
-[[ -f "${SCRIPT_DIR}/lib/security.sh" ]] && source "${SCRIPT_DIR}/lib/security.sh"
-[[ -f "${SCRIPT_DIR}/lib/affiliate.sh" ]] && source "${SCRIPT_DIR}/lib/affiliate.sh"
+source_lib() {
+    local lib_path="$1"
+    if [[ -f "${SCRIPT_DIR}/lib/${lib_path}" ]]; then
+        source "${SCRIPT_DIR}/lib/${lib_path}"
+    else
+        echo "Error: Required library ${lib_path} not found!" >&2
+        exit 1
+    fi
+}
+
+source_lib "core.sh"
+source_lib "security.sh"
+source_lib "affiliate.sh"
+
+# Initialize logging
+init_logging() {
+    touch "$LOG_FILE" 2>/dev/null || {
+        echo "Warning: Cannot create log file $LOG_FILE" >&2
+    }
+}
 
 # Main function
 main() {
+    init_logging
+    
     case "${1:-}" in
         "audit")
             shift
+            if [[ $# -eq 0 ]]; then
+                log_error "URL is required for audit command"
+                show_help
+                exit 1
+            fi
             run_audit "$@"
+            ;;
+        "content-audit")
+            shift
+            if [[ $# -eq 0 ]]; then
+                log_error "URL is required for content-audit command"
+                show_help
+                exit 1
+            fi
+            run_content_audit "$@"
             ;;
         "affiliate")
             shift
@@ -34,7 +73,7 @@ main() {
             show_help
             ;;
         *)
-            echo "Unknown command: ${1:-}"
+            log_error "Unknown command: ${1:-}"
             show_help
             exit 1
             ;;
@@ -49,7 +88,8 @@ USAGE:
     grokipedia-auditor <command> [options]
 
 COMMANDS:
-    audit <url>          Run security audit on website
+    audit <url>          Run comprehensive security audit on website
+    content-audit <url>  Run content-specific audit (as per README)
     affiliate <action>   Manage affiliate operations
     deploy <domain>      Deploy to production
     version              Show version information
@@ -57,6 +97,7 @@ COMMANDS:
 
 EXAMPLES:
     grokipedia-auditor audit https://example.com
+    grokipedia-auditor content-audit https://example.com --report audit.json
     grokipedia-auditor affiliate --generate-link
     grokipedia-auditor deploy example.com
 
