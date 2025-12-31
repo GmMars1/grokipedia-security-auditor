@@ -12,7 +12,7 @@ git clone https://github.com/GmMars1/grokipedia-security-auditor.git
 cd grokipedia-security-auditor
 
 # Verify integrity
-chmod +x verify.sh && ./verify.sh  # 4/4 files ✓
+chmod +x verify.sh && ./verify.sh  # 5/5 files ✓
 ```
 
 ## Repository Structure

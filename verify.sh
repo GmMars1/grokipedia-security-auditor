@@ -3,7 +3,7 @@
 
 # Configuration
 CHECKSUM_FILE="checksums.txt"
-EXPECTED_COUNT=4  # Total entries in checksums.txt minus 2 (verify.sh and checksums.txt can't verify themselves)
+EXPECTED_COUNT=5  # Total entries in checksums.txt minus 2 (verify.sh and checksums.txt can't verify themselves)
 
 # Color codes for output
 GREEN='\033[0;32m'
@@ -32,9 +32,9 @@ fi
 # 3. Run verification
 # Capturing output to hide individual file OKs unless verbose is needed
 if OUTPUT=$($CMD 2>&1); then
-    # Count validated files (approximate based on line count in checksum file)
+    # Count validated files (count non-comment, non-empty lines)
     # Subtract 2 to exclude verify.sh and checksums.txt from the count since they can't verify themselves
-    TOTAL_LINES=$(wc -l < "$CHECKSUM_FILE")
+    TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
     FILE_COUNT=$((TOTAL_LINES - 2))
     
     # Success Message
@@ -47,7 +47,7 @@ else
     
     if [ -z "$FAILED_FILES" ]; then
         # Only verify.sh and checksums.txt failed, which is expected
-        TOTAL_LINES=$(wc -l < "$CHECKSUM_FILE")
+        TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
         FILE_COUNT=$((TOTAL_LINES - 2))
         echo -e "${GREEN}Integrity Verified: ${FILE_COUNT}/${EXPECTED_COUNT} files ✓${NC}"
         echo "Signature: VALID (verify.sh and checksums.txt self-reference ignored)"
