@@ -1,13 +1,30 @@
 <!-- Keywords: security, auditor, verification, integrity, checksum, validation, authentication, framework, solidity, react, python, vulnerability, scanning, compliance, security-auditor, framework-config, security-checks, installation, download, release, integrity-verification -->
 
-# Download latest release
-curl -L -o GrokiPedia-Security-Auditor-v2.3.1-solidity.zip https://github.com/Gmmars1/grokipedia-security-auditor/releases/download/v2.3.1-solidity/GrokiPedia-Security-Auditor-v2.3.1-solidity.zip
+# GrokiPedia Security Auditor
+
+A comprehensive security auditing framework with domain trust verification and framework-specific analysis.
+
+## Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/GmMars1/grokipedia-security-auditor.git
+cd grokipedia-security-auditor
 
 # Verify integrity
-chmod +x verify.sh && ./verify.sh  # 15/15 files ✓
+chmod +x verify.sh && ./verify.sh  # 5/5 files ✓
+```
 
-# Install & run
-unzip GrokiPedia-Security-Auditor-v2.3.1-solidity.zip
-cd GrokiPedia-Security-Auditor-v2.3.1
-pip install -r requirements.txt
-./grokipedia-auditor content-audit https://example.com --report audit.json
+## Repository Structure
+
+- `verify.sh` - Integrity verification script
+- `config/` - Configuration files for frameworks and domain trust
+- `config.yaml` - Main configuration file
+- `checksums.txt` - SHA256 checksums for verification
+
+## Features
+
+- Domain trust verification (42 trusted / 14 flagged domains)
+- Framework-specific security checks (Solidity, React, Python)
+- Integrity verification with SHA256 checksums
+- Comprehensive security scoring system
