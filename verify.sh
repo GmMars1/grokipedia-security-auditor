@@ -19,7 +19,7 @@ if [ ! -f "$CHECKSUM_FILE" ]; then
     exit 1
 fi
 
-# 2. distinct SHA256 command based on OS (Linux vs macOS)
+# 2. Detect SHA256 command based on OS (Linux vs macOS)
 if command -v sha256sum &> /dev/null; then
     CMD="sha256sum -c $CHECKSUM_FILE --quiet"
 elif command -v shasum &> /dev/null; then

@@ -3,10 +3,10 @@
 # Keywords: checksum, integrity, verification, security, validation, authentication, hash, sha256, file-integrity, security-check, validation-data, checksum-file
 
 # Main files
-c6381f0e4a19579c755082fdb6b815683cc57602e91ffeb6d69ec222b4ea659d  verify.sh
+875467d8d4c66691d7358c6a5fb00db7d3db7dff3b24dcf1a84698d513a63158  verify.sh
 83507b285dc118d23ce21f65fda1ad059d261e1651470696e9d5130c9daa0419  README.md
 fd3e2baaaa8ff49837445e72bdbffab279f2b8292d89dca1d70a2cbb4a3c3bd3  README
 a6cc780b540bd21cc0d2651d2c0be7b72cf27bdf651c6f5438dd3dddcdf0f535  config/framework-v2.3.1.yaml
 80753b716e9ca5cb2699caf17ea286f00715c1f641e3a4ce0c395bf8f472049c  config/domains-trust-v2.4.yaml
 77639b055f48578f895bfe7f68873907e6f82baaac8357f5d8e92d6fa269b583  config.yaml
-c6381f0e4a19579c755082fdb6b815683cc57602e91ffeb6d69ec222b4ea659d  checksums.txt
+cb467ab758068bf740e6d9ea16928392862624e57b05a9ed5dd6deae559c17e2  checksums.txt
