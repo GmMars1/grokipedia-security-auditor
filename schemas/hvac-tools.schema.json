@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grokipedia.local/schemas/hvac-tools.schema.json",
+  "title": "HVAC Receptionist Tool Contracts",
+  "type": "object",
+  "required": ["check_availability", "create_booking"],
+  "properties": {
+    "check_availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["service_type", "zip_code"],
+      "properties": {
+        "service_type": {
+          "type": "string",
+          "enum": ["diagnostic_repair", "routine_tuneup", "estimate_consult"]
+        },
+        "zip_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        },
+        "requested_date": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        }
+      },
+      "x-trigger": "Use only after customer agrees to book and required intake fields are collected."
+    },
+    "create_booking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "service_type",
+        "full_name",
+        "service_address",
+        "city",
+        "zip_code",
+        "callback_phone",
+        "equipment_type",
+        "symptoms",
+        "arrival_window_start",
+        "arrival_window_end"
+      ],
+      "properties": {
+        "service_type": {
+          "type": "string",
+          "enum": ["diagnostic_repair", "routine_tuneup", "estimate_consult"]
+        },
+        "full_name": { "type": "string", "minLength": 2 },
+        "service_address": { "type": "string", "minLength": 5 },
+        "city": { "type": "string", "minLength": 2 },
+        "zip_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        },
+        "callback_phone": {
+          "type": "string",
+          "pattern": "^[0-9+()\\-\\s]{10,20}$"
+        },
+        "equipment_type": {
+          "type": "string",
+          "enum": ["furnace", "heat_pump", "central_ac", "mini_split", "other"]
+        },
+        "symptoms": { "type": "string", "minLength": 3 },
+        "arrival_window_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "arrival_window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "emergency": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "x-trigger": "Use after customer explicitly confirms one offered 2-hour window."
+    }
+  }
+}
