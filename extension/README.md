@@ -1,6 +1,6 @@
 # GrokiPedia Citation Inspector (prototype)
 
-An on-demand Manifest V3 extension for inspecting outbound links in the current page's article or main content. It reports HTTP links, links without a readable label, and repeated destinations. These checks do **not** determine whether a link works, a domain is trustworthy, or a claim is true. This prototype does not implement the framework scanner or trust scores mentioned in the repository's older configuration.
+An on-demand Manifest V3 extension for inspecting outbound links in the current page's article or main content. It reports HTTP links, links without a readable label, and repeated URL paths (which may have distinct query strings). These checks do **not** determine whether a link works, a domain is trustworthy, or a claim is true. This prototype does not implement the framework scanner or trust scores mentioned in the repository's older configuration.
 
 ## Install locally
 
@@ -12,4 +12,4 @@ Permissions: `activeTab` grants temporary access to the page the user selects; `
 
 ## Scope and validation
 
-`node --check extension/scan.js && node --check extension/popup.js` validates JavaScript syntax. Load unpacked in desktop Chrome for the browser acceptance check. Inspect an article with an HTTP external link, a link containing only an image with no alt text, and repeated outbound links; confirm the three lists and verify in DevTools Network that the extension makes no requests. Chrome internal pages should show a friendly error. No Chrome Web Store submission has been made.
+`node extension/test-scan.js && node extension/test-popup.js` checks the scanner and popup rendering. `node --check extension/scan.js && node --check extension/popup.js` validates JavaScript syntax. Load unpacked in desktop Chrome for the browser acceptance check. Inspect an article with an HTTP external link, a link containing only an image with no alt text, and repeated outbound links; confirm the three lists and verify in DevTools Network that the extension makes no requests. Chrome internal pages should show a friendly error. No Chrome Web Store submission has been made.
