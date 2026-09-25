@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "GrokiPedia Citation Inspector",
+  "version": "0.1.0",
+  "description": "Inspect outbound reference links on the current page when you request it.",
+  "permissions": ["activeTab", "scripting"],
+  "action": { "default_title": "Inspect page references", "default_popup": "popup.html" }
+}

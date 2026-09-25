@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Citation Inspector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Citation Inspector</h1>
+    <p>Inspect outbound links in the main content of this tab. No links are opened or uploaded.</p>
+    <button id="scan" type="button">Inspect this page</button>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section id="results" hidden aria-label="Inspection results">
+      <h2>Link inspection</h2>
+      <p id="summary"></p>
+      <h3>HTTP links</h3><ul id="http"></ul>
+      <h3>Links without a readable label</h3><ul id="unlabeled"></ul>
+      <h3>Repeated URL paths</h3><ul id="repeated"></ul>
+      <p class="note">These are link hygiene signals, not proof that a source is safe, accurate, or reachable. Query strings and fragments are omitted from the display. Only the first 20 in each category are shown.</p>
+    </section>
+  </main>
+  <script src="scan.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
