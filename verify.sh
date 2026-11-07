@@ -1,62 +1,37 @@
 #!/bin/bash
-# Keywords: verification, integrity, checksum, security, validation, authentication, bash, script, verification-script, file-integrity, sha256, hash, security-check, validation-script, linux, macos, integrity-check, file-validation
+set -eu
+export LC_ALL=C
 
-# Configuration
-CHECKSUM_FILE="checksums.txt"
-EXPECTED_COUNT=5  # Files that can be verified (total entries minus verify.sh and checksums.txt self-references)
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
-# Color codes for output
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+manifest=checksums.txt
+expected=(verify.sh README.md README config/framework-v2.3.1.yaml config/domains-trust-v2.4.yaml config.yaml)
+row_pattern='^[0-9a-f]{64}  (.+)$'
+count=0
 
-echo "Starting GrokiPedia integrity verification..."
-
-# 1. Check if checksum file exists
-if [ ! -f "$CHECKSUM_FILE" ]; then
-    echo -e "${RED}[ERROR]${NC} $CHECKSUM_FILE not found. Cannot verify integrity."
-    echo "Please ensure you have downloaded the full release bundle."
+fail() {
+    printf 'Integrity check failed: %s\n' "$1" >&2
     exit 1
-fi
+}
 
-# 2. distinct SHA256 command based on OS (Linux vs macOS)
-if command -v sha256sum &> /dev/null; then
-    CMD="sha256sum -c $CHECKSUM_FILE --quiet"
-elif command -v shasum &> /dev/null; then
-    CMD="shasum -a 256 -c $CHECKSUM_FILE"
-else
-    echo -e "${RED}[ERROR]${NC} No SHA256 utility found. Install coreutils."
-    exit 1
-fi
-
-# 3. Run verification
-# Capturing output to hide individual file OKs unless verbose is needed
-if OUTPUT=$($CMD 2>&1); then
-    # Count validated files (count non-comment, non-empty lines)
-    # Subtract 2 to exclude verify.sh and checksums.txt from the count since they can't verify themselves
-    TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
-    FILE_COUNT=$((TOTAL_LINES - 2))
-    
-    # Success Message
-    echo -e "${GREEN}Integrity Verified: ${FILE_COUNT}/${EXPECTED_COUNT} files ✓${NC}"
-    echo "Signature: VALID"
-    exit 0
-else
-    # Filter out errors for verify.sh and checksums.txt since they can't verify themselves
-    FAILED_FILES=$(echo "$OUTPUT" | grep "FAILED" | grep -v "verify.sh" | grep -v "checksums.txt")
-    
-    if [ -z "$FAILED_FILES" ]; then
-        # Only verify.sh and checksums.txt failed, which is expected
-        TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
-        FILE_COUNT=$((TOTAL_LINES - 2))
-        echo -e "${GREEN}Integrity Verified: ${FILE_COUNT}/${EXPECTED_COUNT} files ✓${NC}"
-        echo "Signature: VALID (verify.sh and checksums.txt self-reference ignored)"
-        exit 0
-    else
-        # Failure Message
-        echo -e "${RED}[FAILED]${NC} Integrity check failed."
-        echo "The following files have been modified or corrupted:"
-        echo "$FAILED_FILES"
-        exit 1
+[[ -f "$manifest" && -r "$manifest" ]] || fail "cannot read $manifest"
+while IFS= read -r row || [[ -n "$row" ]]; do
+    if [[ ! "$row" =~ $row_pattern ]]; then
+        fail "malformed checksum entry at line $((count + 1))"
     fi
+    if (( count >= ${#expected[@]} )) || [[ "${BASH_REMATCH[1]}" != "${expected[count]}" ]]; then
+        fail "unexpected file entry at line $((count + 1))"
+    fi
+    count=$((count + 1))
+done < "$manifest"
+(( count == ${#expected[@]} )) || fail "manifest must list ${#expected[@]} files"
+
+if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum --strict -c "$manifest" || fail "SHA-256 verification did not pass"
+elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 -c "$manifest" || fail "SHA-256 verification did not pass"
+else
+    fail "install a SHA-256 utility (sha256sum or shasum)"
 fi
+
+printf 'SHA-256 checksums match: %s/%s files.\n' "$count" "${#expected[@]}"

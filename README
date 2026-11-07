@@ -5,4 +5,4 @@ GrokiPedia-Security-Auditor-v2.3.1/
 │   └── domains-trust-v2.4.yaml    # 42 trusted / 14 flagged domains
 ├── config.yaml                     # Main configuration file
 ├── README.md                       # Documentation
-└── checksums.txt                   # Self-verifying SHA256 list
+└── checksums.txt                   # SHA-256 checksum manifest
