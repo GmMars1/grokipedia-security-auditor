@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Run security audit / build
+      - name: Verify repository file checksums
         run: ./verify.sh
       
       - name: Deploy to Netlify

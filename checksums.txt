@@ -1,12 +1,6 @@
-# SHA256 checksums for GrokiPedia Security Auditor v2.3.1-solidity
-# Auto-generated checksums for integrity verification
-# Keywords: checksum, integrity, verification, security, validation, authentication, hash, sha256, file-integrity, security-check, validation-data, checksum-file
-
-# Main files
-c6381f0e4a19579c755082fdb6b815683cc57602e91ffeb6d69ec222b4ea659d  verify.sh
-83507b285dc118d23ce21f65fda1ad059d261e1651470696e9d5130c9daa0419  README.md
-fd3e2baaaa8ff49837445e72bdbffab279f2b8292d89dca1d70a2cbb4a3c3bd3  README
+cd8ccf75f560f6cf836270d68792175a0eeed659a72267ba1cae42cc7c9079d5  verify.sh
+e6f9379d5d39786dce97b363aef7c651d00b497f6aa70003eb3f4bc1e7757eb7  README.md
+77ee18c5aca19e175f552812057a2bfa67c60f6060c6995eeb91f95a42ce41b2  README
 a6cc780b540bd21cc0d2651d2c0be7b72cf27bdf651c6f5438dd3dddcdf0f535  config/framework-v2.3.1.yaml
 80753b716e9ca5cb2699caf17ea286f00715c1f641e3a4ce0c395bf8f472049c  config/domains-trust-v2.4.yaml
 77639b055f48578f895bfe7f68873907e6f82baaac8357f5d8e92d6fa269b583  config.yaml
-c6381f0e4a19579c755082fdb6b815683cc57602e91ffeb6d69ec222b4ea659d  checksums.txt
