@@ -7,14 +7,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       
       - name: Run security audit / build
         run: ./verify.sh
       
       - name: Deploy to Netlify
-        uses: netlify/actions/cli@master
+        uses: netlify/actions/cli@3185065f4ab2f6df6f2ef41ee013626e1c02a426
         with:
           args: deploy --prod --dir=. --message="${{ github.event.head_commit.message }}"
         env:

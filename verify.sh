@@ -1,62 +1,109 @@
-#!/bin/bash
-# Keywords: verification, integrity, checksum, security, validation, authentication, bash, script, verification-script, file-integrity, sha256, hash, security-check, validation-script, linux, macos, integrity-check, file-validation
+#!/usr/bin/env bash
+# Verify SHA-256 checksums for every tracked file except this manifest.
 
-# Configuration
+set -u
+
 CHECKSUM_FILE="checksums.txt"
-EXPECTED_COUNT=5  # Files that can be verified (total entries minus verify.sh and checksums.txt self-references)
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
-# Color codes for output
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+if ! cd "$SCRIPT_DIR"; then
+    echo "[ERROR] Cannot access the repository directory." >&2
+    exit 1
+fi
 
-echo "Starting GrokiPedia integrity verification..."
-
-# 1. Check if checksum file exists
 if [ ! -f "$CHECKSUM_FILE" ]; then
-    echo -e "${RED}[ERROR]${NC} $CHECKSUM_FILE not found. Cannot verify integrity."
-    echo "Please ensure you have downloaded the full release bundle."
+    echo "[ERROR] $CHECKSUM_FILE not found." >&2
     exit 1
 fi
 
-# 2. distinct SHA256 command based on OS (Linux vs macOS)
-if command -v sha256sum &> /dev/null; then
-    CMD="sha256sum -c $CHECKSUM_FILE --quiet"
-elif command -v shasum &> /dev/null; then
-    CMD="shasum -a 256 -c $CHECKSUM_FILE"
-else
-    echo -e "${RED}[ERROR]${NC} No SHA256 utility found. Install coreutils."
+if ! command -v git >/dev/null 2>&1 || ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "[ERROR] Verification requires a Git working tree to check manifest coverage." >&2
     exit 1
 fi
 
-# 3. Run verification
-# Capturing output to hide individual file OKs unless verbose is needed
-if OUTPUT=$($CMD 2>&1); then
-    # Count validated files (count non-comment, non-empty lines)
-    # Subtract 2 to exclude verify.sh and checksums.txt from the count since they can't verify themselves
-    TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
-    FILE_COUNT=$((TOTAL_LINES - 2))
-    
-    # Success Message
-    echo -e "${GREEN}Integrity Verified: ${FILE_COUNT}/${EXPECTED_COUNT} files ✓${NC}"
-    echo "Signature: VALID"
-    exit 0
+if command -v sha256sum >/dev/null 2>&1; then
+    hash_file() {
+        sha256sum "$1" | awk '{ print $1 }'
+    }
+elif command -v shasum >/dev/null 2>&1; then
+    hash_file() {
+        shasum -a 256 "$1" | awk '{ print $1 }'
+    }
 else
-    # Filter out errors for verify.sh and checksums.txt since they can't verify themselves
-    FAILED_FILES=$(echo "$OUTPUT" | grep "FAILED" | grep -v "verify.sh" | grep -v "checksums.txt")
-    
-    if [ -z "$FAILED_FILES" ]; then
-        # Only verify.sh and checksums.txt failed, which is expected
-        TOTAL_LINES=$(grep -v "^#" "$CHECKSUM_FILE" | grep -v "^$" | wc -l)
-        FILE_COUNT=$((TOTAL_LINES - 2))
-        echo -e "${GREEN}Integrity Verified: ${FILE_COUNT}/${EXPECTED_COUNT} files ✓${NC}"
-        echo "Signature: VALID (verify.sh and checksums.txt self-reference ignored)"
-        exit 0
-    else
-        # Failure Message
-        echo -e "${RED}[FAILED]${NC} Integrity check failed."
-        echo "The following files have been modified or corrupted:"
-        echo "$FAILED_FILES"
-        exit 1
+    echo "[ERROR] No SHA-256 utility found; install coreutils or shasum." >&2
+    exit 1
+fi
+
+entry_count=0
+failed=0
+while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+        ""|\#*) continue ;;
+    esac
+
+    if [[ ! "$line" =~ ^([[:xdigit:]]{64})\ \ (.+)$ ]]; then
+        echo "[FAILED] Invalid checksum entry: $line" >&2
+        failed=1
+        continue
     fi
+
+    expected_hash="${BASH_REMATCH[1]}"
+    file="${BASH_REMATCH[2]}"
+
+    if [ "$file" = "$CHECKSUM_FILE" ]; then
+        echo "[FAILED] Manifest cannot verify itself: $file" >&2
+        failed=1
+        continue
+    fi
+
+    case "$file" in
+        /*|../*|*/../*|*/..|./*)
+            echo "[FAILED] Manifest path escapes the repository: $file" >&2
+            failed=1
+            continue
+            ;;
+    esac
+
+    if [ ! -f "$file" ] || [ -L "$file" ]; then
+        echo "[FAILED] Missing file: $file" >&2
+        failed=1
+        continue
+    fi
+
+    matches="$(awk -v path="$file" 'substr($0, 67) == path { count++ } END { print count+0 }' "$CHECKSUM_FILE")"
+    if [ "$matches" -ne 1 ]; then
+        echo "[FAILED] Manifest contains $matches entries for $file; expected exactly one." >&2
+        failed=1
+        continue
+    fi
+
+    actual_hash="$(hash_file "$file")"
+    if [ "$actual_hash" != "$expected_hash" ]; then
+        echo "[FAILED] Checksum mismatch: $file" >&2
+        failed=1
+        continue
+    fi
+
+    if git ls-files --error-unmatch -- "$file" >/dev/null 2>&1; then
+        entry_count=$((entry_count + 1))
+    fi
+done < "$CHECKSUM_FILE"
+
+expected_count="$(git ls-files | awk -v manifest="$CHECKSUM_FILE" '$0 != manifest { count++ } END { print count+0 }')"
+
+while IFS= read -r file; do
+    [ "$file" = "$CHECKSUM_FILE" ] && continue
+    matches="$(awk -v path="$file" 'substr($0, 67) == path { count++ } END { print count+0 }' "$CHECKSUM_FILE")"
+    if [ "$matches" -ne 1 ]; then
+        echo "[FAILED] Tracked file is missing from the manifest or duplicated: $file" >&2
+        failed=1
+    fi
+done < <(git ls-files)
+
+if [ "$failed" -ne 0 ] || [ "$entry_count" -ne "$expected_count" ]; then
+    echo "[FAILED] Integrity check failed ($entry_count/$expected_count tracked files verified)." >&2
+    exit 1
 fi
+
+echo "Integrity checks passed: $entry_count/$expected_count tracked files verified."
+echo "Note: checksums.txt is not self-verifying. Its authenticity must be established through a trusted distribution channel."
