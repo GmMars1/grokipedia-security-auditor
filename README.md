@@ -11,8 +11,8 @@ A comprehensive security auditing framework with domain trust verification and f
 git clone https://github.com/GmMars1/grokipedia-security-auditor.git
 cd grokipedia-security-auditor
 
-# Verify integrity
-chmod +x verify.sh && ./verify.sh  # 5/5 files ✓
+# Verify integrity (run from a Git working tree)
+./verify.sh
 ```
 
 ## Repository Structure
@@ -28,3 +28,8 @@ chmod +x verify.sh && ./verify.sh  # 5/5 files ✓
 - Framework-specific security checks (Solidity, React, Python)
 - Integrity verification with SHA256 checksums
 - Comprehensive security scoring system
+
+The checksum manifest covers every tracked file except `checksums.txt` itself.
+It detects accidental or unauthorized file changes only when the manifest is
+trusted; the manifest is not signed and cannot authenticate itself. Obtain the
+manifest through a trusted distribution channel before relying on it.

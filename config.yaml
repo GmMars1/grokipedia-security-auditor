@@ -1,6 +1,6 @@
 # GrokiPedia Security Auditor v2.3.1-solidity
 # Domain Trust Rules & Framework Config
-# Apache 2.0 Licensed | Zero False Positives
+# Apache 2.0 Licensed
 # Updated: Dec 10, 2025 | 42 Trusted / 14 Flagged
 # Keywords: verification, integrity, checksum, security, validation, authentication, trust, domain, configuration, yaml, v2.3.1, auditor, framework, solidity, react, python, security-auditor, vulnerability, scanning, compliance, apache-2.0, trusted-domains, flagged-domains, framework-config, security-checks
 
@@ -76,32 +76,23 @@ scoring_weights:
   citation_depth: 0.15
   framework_vulns: 0.10
 
-# Output Formats
+# Configured output formats
 report_formats:
   json: true
-  pdf: true
   csv: true
   cli_pretty: true
 
-# Verification Checksums (self-validating)
+# Integrity verification (checksums do not authenticate the manifest)
 self_verify:
-  files_required: 15
+  files_required: 12
   checksum_file: "checksums.txt"
   verify_scripts:
     - "verify.sh"
-    - "verify.ps1"
-    - "verify.bat"
 
 # Rate Limits (anti-abuse)
 rate_limits:
   requests_per_minute: 30
   concurrent_scans: 5
-
-# Whop Integration (enterprise)
-whop:
-  enabled: true
-  product_url: "https://whop.com/grokipedia-auditor"
-  enterprise_tier: "$97/mo"
 
 # Apache 2.0 Compliance
 license: "Apache-2.0"
